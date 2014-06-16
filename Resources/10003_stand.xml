@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root><plists><plist>10003_stand.plist</plist></plists><animations><animation>
+            <name>10003_stand</name>
+            <delay>0.065</delay>
+            <flipX>false</flipX>
+            <flipY>false</flipY>
+            <spriteFrame>10003_stand_0000.png</spriteFrame>
+            <spriteFrame>10003_stand_0001.png</spriteFrame>
+            <spriteFrame>10003_stand_0002.png</spriteFrame>
+            <spriteFrame>10003_stand_0003.png</spriteFrame>
+            <spriteFrame>10003_stand_0004.png</spriteFrame>
+            <spriteFrame>10003_stand_0005.png</spriteFrame>
+            <spriteFrame>10003_stand_0006.png</spriteFrame>
+            <spriteFrame>10003_stand_0007.png</spriteFrame>
+        </animation></animations></root>

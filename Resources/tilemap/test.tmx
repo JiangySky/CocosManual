@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="15" height="10" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" source="perspective_walls.tsx"/>
+ <tileset firstgid="17" name="myTile" tilewidth="64" tileheight="64">
+  <image source="isometric_tileset.png" width="128" height="128"/>
+ </tileset>
+ <layer name="块层 1" width="15" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBi6gBWIOYGYDcrnAWImIGYGYhYCenmg6riQ+CBz2IGYg4BekDw3VC0D1A08UDEe4p2P4hYQFgBiXjL0EwKEwoIWAAAHFwDj
+  </data>
+ </layer>
+ <layer name="块层 3" width="15" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgF9ASCaJgUIIyGBzMAAG+oAJE=
+  </data>
+ </layer>
+ <layer name="块层 4" width="15" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFQwkIomFSgDAapiUAAEuoAJE=
+  </data>
+ </layer>
+ <objectgroup name="tables" width="15" height="10">
+  <object name="table0" gid="13" x="512" y="552">
+   <properties>
+    <property name="tag" value="0"/>
+   </properties>
+  </object>
+  <object name="table1" gid="13" x="544" y="552">
+   <properties>
+    <property name="tag" value="1"/>
+   </properties>
+  </object>
+  <object name="table2" gid="13" x="576" y="552">
+   <properties>
+    <property name="tag" value="2"/>
+   </properties>
+  </object>
+  <object name="table3" gid="13" x="608" y="552">
+   <properties>
+    <property name="tag" value="3"/>
+   </properties>
+  </object>
+  <object name="table4" gid="13" x="640" y="552">
+   <properties>
+    <property name="tag" value="4"/>
+   </properties>
+  </object>
+  <object name="objRect" x="502" y="485" width="222" height="84">
+   <properties>
+    <property name="a" value="188"/>
+    <property name="b" value="125"/>
+    <property name="g" value="200"/>
+    <property name="r" value="50"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

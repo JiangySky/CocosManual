@@ -1,0 +1,1420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Welcome</key>
+	<string>{
+    auto label = Label::createWithSystemFont(&quot;Cocos2dx 3.0 Manual&quot;, &quot;Marker Felt&quot;, 50);
+    Point pos = Point(getContentSize());
+    label-&gt;setColor(Color3B::GREEN);
+    label-&gt;enableShadow();
+    label-&gt;setPosition(pos.getMidpoint(Point::ZERO));
+    addChild(label);
+}</string>
+	<key>Scene</key>
+	<string>{
+    auto scene = Scene::create();
+    DIRECTOR-&gt;replaceScene(scene);
+}</string>
+	<key>Layer</key>
+	<string>{
+    auto layer = Layer::create();
+    addChild(layer);
+}</string>
+	<key>LayerColor</key>
+	<string>{
+    float width = 200;
+    
+    // red layer
+    // (not ignore anchor for position)
+    auto layerRed = LayerColor::create(Color4B::RED, width, width);
+    layerRed-&gt;setPosition(Point(width / 2, width / 2));
+    layerRed-&gt;ignoreAnchorPointForPosition(false);
+    addChild(layerRed);
+    
+    // blue layer with translucent
+    // (ignore anchor for position [default])
+    auto layerBlue = LayerColor::create(Color4B(0, 0, 255, 100), width, width);
+    layerBlue-&gt;setPosition(Point(width / 2, width / 2));
+    addChild(layerBlue);
+    
+    // layer update color
+    Point pos = Point(getContentSize());
+    auto layerColor = LayerColor::create(Color4B::BLACK);
+    layerColor-&gt;setTag(Tag::TAG_LAYERCOLOR);
+    layerColor-&gt;setContentSize(Size(width * 2, width * 2));
+    layerColor-&gt;ignoreAnchorPointForPosition(false);
+    layerColor-&gt;setPosition(pos - Point(width + 5, width + 5));
+    addChild(layerColor);
+    
+    // !!!: update color in update()
+}</string>
+	<key>LayerGradient</key>
+	<string>{
+    float width = 200;
+    // red layer
+    // (not ignore anchor for position)
+    auto layerRed = LayerGradient::create(Color4B::RED, Color4B::YELLOW);
+    layerRed-&gt;setContentSize(Size(width, width));
+    layerRed-&gt;setPosition(Point(width / 2, width / 2));
+    layerRed-&gt;ignoreAnchorPointForPosition(false);
+    addChild(layerRed);
+    
+    // blue layer with translucent
+    // (ignore anchor for position [default])
+    auto layerBlue = LayerGradient::create(Color4B::BLUE, Color4B::GREEN);
+    layerBlue-&gt;setOpacity(100);
+    layerBlue-&gt;setContentSize(Size(width, width));
+    layerBlue-&gt;setPosition(Point(width / 2, width / 2));
+    addChild(layerBlue);
+    
+    // layer update along point
+    Point pos = Point(getContentSize());
+    auto layerGradient = LayerGradient::create(Color4B::MAGENTA, Color4B::ORANGE, Point::ZERO);
+    layerGradient-&gt;setTag(Tag::TAG_LAYERGRADIENT);
+    layerGradient-&gt;setContentSize(Size(width * 2, width * 2));
+    layerGradient-&gt;ignoreAnchorPointForPosition(false);
+    layerGradient-&gt;setPosition(pos - Point(width + 5, width + 5));
+
+    auto drawNode = DrawNode::create();
+    drawNode-&gt;setTag(Tag::TAG_DRAWNODE);
+    drawNode-&gt;setPosition(Point::ZERO);
+    layerGradient-&gt;addChild(drawNode);
+    
+    addChild(layerGradient);
+    
+    // !!!: update along point in update()
+}</string>
+	<key>LayerMultiplex</key>
+	<string>{
+    float width = 400;
+    const int Amount = 6;
+    Point posBtn = Point(getContentSize()) - Point(55, 55);
+    auto layerMultiplex = LayerMultiplex::create();
+    Color4B color[Amount] = {Color4B::RED, Color4B::GREEN, Color4B::BLUE, Color4B::ORANGE, Color4B::YELLOW, Color4B::MAGENTA};
+    for (int i = 0; i &lt; Amount; i++) {
+        auto layerColor = LayerColor::create(color[i], width, width);
+        layerColor-&gt;ignoreAnchorPointForPosition(false);
+        layerMultiplex-&gt;addLayer(layerColor);
+        
+        auto btn = Button::create(&quot;white.png&quot;);
+        BIND_LISTENER_TOUCH(btn, this, ManualDisplay::onSwitchLayer);
+        btn-&gt;setColor(Color3B(color[i]));
+        btn-&gt;setTag(i);
+        btn-&gt;setPosition(posBtn);
+        posBtn.y -= 80;
+        addChild(btn);
+    }
+    layerMultiplex-&gt;setPosition(NODE_CENTER(this));
+    layerMultiplex-&gt;switchTo(0);
+    layerMultiplex-&gt;setTag(Tag::TAG_LAYERMULTIPLEX);
+    addChild(layerMultiplex);
+    
+    // !!!: switch layer in onSwitchLayer()
+}</string>
+	<key>Sprite</key>
+	<string>{
+    auto nodeSprites = Node::create();
+    Point posCenter = NODE_CENTER(this);
+    Size size;
+    Point pos;
+    Rect rect;
+    
+    // sprite from png (The whole of dragon)
+    auto sprPng = Sprite::create(&quot;dragon.png&quot;);
+    sprPng-&gt;setPosition(posCenter - Point(80, 30));
+    nodeSprites-&gt;addChild(sprPng);
+    
+    // sprite from png with rect (The part of dragon)
+    size = sprPng-&gt;getContentSize();
+    pos = sprPng-&gt;getPosition();
+    size.width /= 2;
+    pos.x += size.width;
+    rect = Rect(size.width, 0, size.width, size.height);
+    auto sprPngRect = Sprite::create(&quot;dragon.png&quot;, rect);
+    sprPngRect-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE_LEFT);
+    sprPngRect-&gt;setPosition(pos);
+    nodeSprites-&gt;addChild(sprPngRect);
+    
+    // load plist file
+    LOADPLSIT(&quot;10003_stand.plist&quot;);
+    LOADPLSIT(&quot;10003_move.plist&quot;);
+    Point posFrame = Point(100, 400);
+    
+    // sprite from frame (The people standing)
+    auto frame = SPRITEFRAMECACHE-&gt;getSpriteFrameByName(&quot;10003_stand_0000.png&quot;);
+    auto sprFrame = Sprite::createWithSpriteFrame(frame);
+    sprFrame-&gt;setPosition(posFrame);
+    nodeSprites-&gt;addChild(sprFrame);
+    
+    // sprite from frame name (The people running)
+    auto sprFrameName = Sprite::createWithSpriteFrameName(&quot;10003_move_0000.png&quot;);
+    sprFrameName-&gt;setPosition(posFrame + Point(140, 0));
+    sprFrameName-&gt;setTag(Tag::TAG_SPRITEFRAME);
+    nodeSprites-&gt;addChild(sprFrameName);
+    
+    // sprite frome texture (The whole of wolf)
+    auto texture = TEXTURECACHE-&gt;addImage(&quot;wolf.png&quot;);
+    auto sprTexture = Sprite::createWithTexture(texture);
+    sprTexture-&gt;setPosition(posFrame + Point(400, 50));
+    nodeSprites-&gt;addChild(sprTexture);
+    
+    // sprite from texture with rect (The part of wolf)
+    size = sprTexture-&gt;getContentSize();
+    pos = sprTexture-&gt;getPosition();
+    size.width /= 2;
+    pos.x += size.width;
+    rect = Rect(size.width, 0, size.width, size.height);
+    auto sprTextRect = Sprite::createWithTexture(texture, rect);
+    sprTextRect-&gt;setPosition(pos);
+    nodeSprites-&gt;addChild(sprTextRect);
+    
+    nodeSprites-&gt;setTag(Tag::TAG_NODESPRITE);
+    addChild(nodeSprites);
+    
+    // !!!: update spriteFrame(runner) in update
+    // !!!: setSpriteFrame, not runAction
+    
+    // add sprite controller
+    addSpriteController();
+    
+    // !!!: change sprite attribute by controller
+}</string>
+	<key>Label</key>
+	<string>{
+    float posY = getContentSize().height - 50;
+    Point pos = Point(150, posY);
+    
+    for (int i = 0; i &lt; 4; i++) {
+        // label with system font
+        auto labSys = Label::createWithSystemFont(&quot;SystemFont&quot;, &quot;Marker Felt&quot;, 30);
+        if (labSys) {
+            labSys-&gt;setPosition(pos);
+            labSys-&gt;setColor(Color3B::MAGENTA);
+            switch (i) {
+                case 0: // no effect (col 1)
+                    labSys-&gt;disableEffect();
+                    break;
+                    
+                case 1: // shadow (col 2)
+                    labSys-&gt;enableShadow();
+                    break;
+                
+                case 2: // outline (col 3)
+                    labSys-&gt;enableOutline(Color4B::GREEN, 3);
+                    break;
+                
+                case 3: // grow (col 4)
+                    labSys-&gt;enableGlow(Color4B::BLUE);
+                    break;
+                    
+                default:
+                    break;
+            }
+            addChild(labSys);
+        }
+        
+        pos.y -= 100;
+        
+        // label with ttf
+        auto labTTF = Label::createWithTTF(&quot;LabelTTF&quot;, &quot;pacifico.ttf&quot;, 30);
+        if (labTTF) {
+            labTTF-&gt;setPosition(pos);
+            labTTF-&gt;setColor(Color3B::ORANGE);
+            switch (i) {
+                case 0: // no effect (col 1)
+                    labTTF-&gt;disableEffect();
+                    break;
+                    
+                case 1: // shadow (col 2)
+                    labTTF-&gt;enableShadow();
+                    break;
+                    
+                case 2: // outline (col 3)
+                    labTTF-&gt;enableOutline(Color4B::GREEN, 3);
+                    break;
+                    
+                case 3: // grow (col 4)
+                    labTTF-&gt;enableGlow(Color4B::BLUE);
+                    break;
+                    
+                default:
+                    break;
+            }
+            addChild(labTTF);
+        }
+        
+        pos.y -= 100;
+        
+        // label with BMFont (520)
+        auto labBMF = Label::createWithBMFont(&quot;font_vip.fnt&quot;, &quot;520&quot;);
+        if (labBMF) {
+            labBMF-&gt;setPosition(pos);
+            switch (i) {
+                case 0: // no effect (col 1)
+                    labBMF-&gt;disableEffect();
+                    break;
+                    
+                case 1: // shadow (col 2)
+                    labBMF-&gt;enableShadow();
+                    break;
+                    
+                case 2: // outline (col 3)
+                    labBMF-&gt;enableOutline(Color4B::GREEN, 3);
+                    break;
+                    
+                case 3: // grow (col 4)
+                    labBMF-&gt;enableGlow(Color4B::BLUE);
+                    break;
+                    
+                default:
+                    break;
+            }
+            addChild(labBMF);
+        }
+        
+        pos.y -= 100;
+        
+        // label with CharMap (1314)
+        auto labCMap = Label::createWithCharMap(&quot;font_power.png&quot;, 27, 28, &apos;0&apos;);
+        if (labCMap) {
+            labCMap-&gt;setPosition(pos);
+            labCMap-&gt;setString(&quot;1314&quot;);
+            switch (i) {
+                case 0: // no effect (col 1)
+                    labCMap-&gt;disableEffect();
+                    break;
+                    
+                case 1: // shadow (col 2)
+                    labCMap-&gt;enableShadow();
+                    break;
+                    
+                case 2: // outline (col 3)
+                    labCMap-&gt;enableOutline(Color4B::GREEN, 3);
+                    break;
+                    
+                case 3: // grow (col 4)
+                    labCMap-&gt;enableGlow(Color4B::BLUE);
+                    break;
+                    
+                default:
+                    break;
+            }
+            addChild(labCMap);
+        }
+        
+        pos.x += 150;
+        posY -= 40;
+        pos.y = posY;
+    }
+}</string>
+	<key>Menu</key>
+	<string>{
+    const int MenuAmount = 6;
+    string Menu[] = {&quot;NewGame&quot;, &quot;Continue&quot;, &quot;Highscore&quot;, &quot;Help&quot;, &quot;About&quot;, &quot;MoreGame&quot;};
+    
+    // add title
+    auto labTitle = Label::createWithSystemFont(&quot;MentTitle&quot;, &quot;Marker Felt&quot;, 40);
+    labTitle-&gt;setColor(Color3B::RED);
+    labTitle-&gt;enableShadow();
+    labTitle-&gt;setPosition(Point(getContentSize().width / 2, getContentSize().height - 60));
+    labTitle-&gt;setTag(Tag::TAG_MENUTITLE);
+    addChild(labTitle);
+    
+    // add menu with label (center)
+    Vector&lt;MenuItem *&gt; vecItem;
+    for (int i = 0; i &lt; MenuAmount; i++) {
+        auto label = Label::createWithTTF(Menu[i].c_str(), &quot;pacifico.ttf&quot;, 30);
+        label-&gt;setColor(Color3B::GREEN);
+        label-&gt;enableShadow();
+        auto menuItem = MenuItemLabel::create(label, [&amp;](Ref * pSender) {
+            MenuItem * menuItem = dynamic_cast&lt;MenuItem *&gt;(pSender);
+            int tag = menuItem-&gt;getTag();
+            if (tag == 0) {
+                auto miCont = menuItem-&gt;getParent()-&gt;getChildByTag(1);
+                dynamic_cast&lt;MenuItem *&gt;(miCont)-&gt;setEnabled(true);
+            }
+            auto menuTitle = this-&gt;getChildByTag(Tag::TAG_MENUTITLE);
+            if (menuTitle) {
+                string label = VPTR2STRING(menuItem-&gt;getUserData());
+                dynamic_cast&lt;Label *&gt;(menuTitle)-&gt;setString(label.c_str());
+            }
+        });
+        menuItem-&gt;setDisabledColor(Color3B::GRAY);
+        menuItem-&gt;setTag(i);
+        menuItem-&gt;setUserData(STRING2VPTR(Menu[i]));
+        if (i == 1) {
+            menuItem-&gt;setEnabled(false);
+        }
+        vecItem.pushBack(menuItem);
+    }
+    auto menuLabel = Menu::createWithArray(vecItem);
+    menuLabel-&gt;alignItemsVerticallyWithPadding(5);
+    menuLabel-&gt;setPosition(NODE_CENTER(this) - Point(0, 40));
+    addChild(menuLabel);
+    
+    vecItem.clear();
+    LOADPLIST(&quot;menu.plist&quot;);
+    
+    // add menu with image [sprite] (left)
+    for (int i = 0; i &lt; MenuAmount; i++) {
+        auto menuItem = MenuItemImage::create();
+        string frmNormal = StringUtils::format(&quot;menu_%i_%s.png&quot;, i, &quot;n&quot;);
+        string frmSelect = StringUtils::format(&quot;menu_%i_%s.png&quot;, i, &quot;s&quot;);
+        string frmDisable = StringUtils::format(&quot;menu_%i_%s.png&quot;, i, &quot;d&quot;);
+        menuItem-&gt;setNormalSpriteFrame(SPRITEFRAMECACHE-&gt;getSpriteFrameByName(frmNormal.c_str()));
+        menuItem-&gt;setSelectedSpriteFrame(SPRITEFRAMECACHE-&gt;getSpriteFrameByName(frmSelect.c_str()));
+        menuItem-&gt;setDisabledSpriteFrame(SPRITEFRAMECACHE-&gt;getSpriteFrameByName(frmDisable.c_str()));
+        menuItem-&gt;setCallback([&amp;](Ref * pSender) {
+            MenuItem * menuItem = dynamic_cast&lt;MenuItem *&gt;(pSender);
+            int tag = menuItem-&gt;getTag();
+            if (tag == 0) {
+                auto miCont = menuItem-&gt;getParent()-&gt;getChildByTag(1);
+                dynamic_cast&lt;MenuItem *&gt;(miCont)-&gt;setEnabled(true);
+            }
+            auto menuTitle = this-&gt;getChildByTag(Tag::TAG_MENUTITLE);
+            if (menuTitle) {
+                string label = VPTR2STRING(menuItem-&gt;getUserData());
+                dynamic_cast&lt;Label *&gt;(menuTitle)-&gt;setString(label.c_str());
+            }
+        });
+        menuItem-&gt;setTag(i);
+        menuItem-&gt;setUserData(STRING2VPTR(Menu[i]));
+        if (i == 1) {
+            menuItem-&gt;setEnabled(false);
+        }
+        vecItem.pushBack(menuItem);
+    }
+    auto menuImage = Menu::createWithArray(vecItem);
+    menuImage-&gt;alignItemsVerticallyWithPadding(5);
+    menuImage-&gt;setPosition(NODE_CENTER(this) - Point(220, 40));
+    addChild(menuImage);
+    
+    vecItem.clear();
+    
+    // add menu with toggle (right)
+    for (int i = 0; i &lt; MenuAmount; i++) {
+        string frmNormal = StringUtils::format(&quot;menu_%i_%s.png&quot;, i, &quot;n&quot;);
+        string frmSelect = StringUtils::format(&quot;menu_%i_%s.png&quot;, i, &quot;s&quot;);
+        auto sprNormal = Sprite::createWithSpriteFrameName(frmNormal.c_str());
+        auto sprSelect = Sprite::createWithSpriteFrameName(frmSelect.c_str());
+        auto menuItem = MenuItemSprite::create(sprNormal, sprSelect);
+        menuItem-&gt;setTag(i);
+        menuItem-&gt;setUserData(STRING2VPTR(Menu[i]));
+        if (i == 1) {
+            menuItem-&gt;setEnabled(false);
+        }
+        vecItem.pushBack(menuItem);
+    }
+    auto menuItemToggle = MenuItemToggle::createWithCallback([&amp;](Ref * pSender) {
+        MenuItemToggle * menuItemToggle = dynamic_cast&lt;MenuItemToggle *&gt;(pSender);
+        MenuItem * menuItem = menuItemToggle-&gt;getSelectedItem();
+        int tag = menuItem-&gt;getTag();
+        if (tag == 0) {
+            auto miCont = menuItem-&gt;getParent()-&gt;getChildByTag(1);
+            dynamic_cast&lt;MenuItem *&gt;(miCont)-&gt;setEnabled(true);
+        }
+        auto menuTitle = this-&gt;getChildByTag(Tag::TAG_MENUTITLE);
+        if (menuTitle) {
+            string label = VPTR2STRING(menuItem-&gt;getUserData());
+            dynamic_cast&lt;Label *&gt;(menuTitle)-&gt;setString(label.c_str());
+        }
+    }, vecItem);
+    auto menuToggle = Menu::createWithItem(menuItemToggle);
+    menuToggle-&gt;alignItemsVerticallyWithPadding(5);
+    menuToggle-&gt;setPosition(NODE_CENTER(this) - Point(-220, 40));
+    addChild(menuToggle);
+}</string>
+	<key>UI-Layout</key>
+	<string>{
+    float width = 200;
+    
+    // red layout (ANCHOR_MIDDLE)
+    auto latRed = Layout::create();
+    latRed-&gt;setSize(Size(200, 200));
+    latRed-&gt;setBackGroundColor(Color3B::RED);
+    latRed-&gt;setBackGroundColorType(LAYOUT_COLOR_SOLID);
+    latRed-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE);
+    latRed-&gt;setPosition(Point(width / 2, width / 2));
+    addChild(latRed);
+    
+    // gradient layout (ANCHOR_ZERO)
+    auto latGrd = Layout::create();
+    latGrd-&gt;setSize(Size(200, 200));
+    latGrd-&gt;setBackGroundColor(Color3B::BLUE, Color3B::YELLOW);
+    latGrd-&gt;setBackGroundColorType(LAYOUT_COLOR_GRADIENT);
+    latGrd-&gt;setPosition(Point(width, width));
+    addChild(latGrd);
+    
+    // none bg layout
+    auto latClear = Layout::create();
+    latGrd-&gt;setSize(Size(200, 200));
+    auto drawNode = DrawNode::create();
+    Point vet[] = {Point::ZERO, Point(width, 0), Point(width, width), Point(0, width)};
+    drawNode-&gt;drawPolygon(vet, 4, Color4F(), 2, Color4F::GRAY);
+    latClear-&gt;addChild(drawNode);
+    latClear-&gt;setPosition(Point(width * 2, 0));
+    addChild(latClear);
+}</string>
+	<key>UI-Text</key>
+	<string>{
+    float posY = getContentSize().height - 80;
+    Point pos = Point(150, posY);
+    
+    // text with system font
+    auto txt = Text::create(&quot;Text System&quot;, &quot;Marker Felt&quot;, 30);
+    txt-&gt;setColor(Color3B::MAGENTA);
+    txt-&gt;setPosition(pos);
+    txt-&gt;setTouchScaleChangeEnabled(true);
+    txt-&gt;setBright(true);
+    addChild(txt);
+    
+    pos.y -= 100;
+    
+    // text with BMFont (520)
+    auto txtBMF = TextBMFont::create(&quot;520&quot;, &quot;font_vip.fnt&quot;);
+    txtBMF-&gt;setPosition(pos);
+    addChild(txtBMF);
+    
+    pos.y -= 100;
+    
+    // text with atlas (1314)
+    auto txtAtlas = TextAtlas::create(&quot;1314&quot;, &quot;font_power.png&quot;, 27, 28, &quot;0&quot;);
+    txtAtlas-&gt;setPosition(pos);
+    addChild(txtAtlas);
+    
+    pos = Point(400, posY);
+    Size sizeTF = Size(300, 40);
+    
+    // text field
+    auto tfAcc = TextField::create(&quot;TF Input Account&quot;, &quot;Helvetica&quot;, 30);
+    tfAcc-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE_LEFT); // effective
+    tfAcc-&gt;setColor(Color3B::BLUE);
+    tfAcc-&gt;setSize(sizeTF);
+    tfAcc-&gt;setTouchSize(sizeTF);
+    tfAcc-&gt;setTouchAreaEnabled(true); // necessary
+    tfAcc-&gt;setPosition(pos);
+    tfAcc-&gt;setMaxLength(12);
+    tfAcc-&gt;setMaxLengthEnabled(true); // necessary
+    pos.y -= 50;
+    auto tfPsw = TextField::create(&quot;TF Input Password&quot;, &quot;Helvetica&quot;, 30);
+    tfPsw-&gt;setTextHorizontalAlignment(TextHAlignment::LEFT); // invalid
+    tfPsw-&gt;setColor(Color3B::BLUE);
+    tfPsw-&gt;setPasswordEnabled(true);
+    tfPsw-&gt;setPasswordStyleText(&quot;o&quot;);
+    tfPsw-&gt;setPosition(pos);
+    addChild(tfAcc);
+    addChild(tfPsw);
+    
+    pos.y -= 100;
+    
+    // edit box (with background)
+    auto ebAcc = EditBox::create(sizeTF, Scale9Sprite::create(&quot;white.png&quot;, Rect(0, 0, sizeTF.width, sizeTF.height)));
+    ebAcc-&gt;setColor(Color3B::GRAY);
+    ebAcc-&gt;setPlaceHolder(&quot;EB Input Account&quot;);
+    ebAcc-&gt;setFont(&quot;Marker Felt&quot;, 30);
+    ebAcc-&gt;setFontColor(Color3B::BLUE);
+    ebAcc-&gt;setPosition(pos);
+    pos.y -= 50;
+    auto ebPsw = EditBox::create(sizeTF, Scale9Sprite::create(&quot;white.png&quot;, Rect(0, 0, sizeTF.width, sizeTF.height)));
+    ebPsw-&gt;setColor(Color3B::GRAY);
+    ebPsw-&gt;setPlaceHolder(&quot;EB Input Password&quot;);
+    ebPsw-&gt;setFont(&quot;Helvetica&quot;, 30);
+    ebPsw-&gt;setFontColor(Color3B::BLUE);
+    ebPsw-&gt;setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
+    ebPsw-&gt;setInputFlag(EditBox::InputFlag::PASSWORD);
+    ebPsw-&gt;setPosition(pos);
+    ebPsw-&gt;setMaxLength(12);
+    addChild(ebAcc);
+    addChild(ebPsw);
+    
+    pos.y -= 100;
+    
+    // rich text
+    auto rtxt = RichText::create();
+    rtxt-&gt;ignoreContentAdaptWithSize(false);
+    rtxt-&gt;setSize(Size(700, 200));
+    
+    auto reTxt1 = RichElementText::create(1, Color3B::RED, 255, &quot;[System] &quot;, &quot;Marker Felt&quot;, 30);
+    auto reTxt2 = RichElementText::create(2, Color3B::BLACK, 255, &quot;Congratulations! &quot;, &quot;Helvetica&quot;, 30);
+    auto reImg3 = RichElementImage::create(3, Color3B::WHITE, 160, &quot;star.png&quot;);
+    
+    auto btnName = ButtonText::create(&quot;Ghost &quot;, Color3B::GREEN, &quot;Helvetica&quot;, 30);
+    BIND_LISTENER_TOUCH(btnName, this, ManualDisplay::onTouchRichText);
+    auto reNode4 = RichElementCustomNode::create(4, Color3B::WHITE, 255, btnName);
+    
+    auto reTxt5 = RichElementText::create(5, Color3B::BLACK, 255, &quot;have got a sword &quot;, &quot;Helvetica&quot;, 30);
+    
+    auto btnWeapon = ButtonText::create(&quot;ENDLESS &quot;, Color3B::ORANGE, &quot;Helvetica&quot;, 30);
+    BIND_LISTENER_TOUCH(btnWeapon, this, ManualDisplay::onTouchRichText);
+    auto reNode6 = RichElementCustomNode::create(4, Color3B::WHITE, 255, btnWeapon);
+    
+    auto reTxt7 = RichElementText::create(7, Color3B::BLACK, 255, &quot;from the battle &quot;, &quot;Helvetica&quot;, 30);
+    
+    auto btnField = ButtonText::create(&quot;warcraft &quot;, Color3B::MAGENTA, &quot;Helvetica&quot;, 30);
+    BIND_LISTENER_TOUCH(btnField, this, ManualDisplay::onTouchRichText);
+    auto reNode8 = RichElementCustomNode::create(4, Color3B::WHITE, 255, btnField);
+    
+    auto reImg9 = RichElementImage::create(9, Color3B::GREEN, 160, &quot;CloseNormal.png&quot;);
+    
+    rtxt-&gt;pushBackElement(reTxt1);
+    rtxt-&gt;pushBackElement(reTxt2);
+    rtxt-&gt;pushBackElement(reImg3);
+    rtxt-&gt;pushBackElement(reNode4);
+    rtxt-&gt;pushBackElement(reTxt5);
+    rtxt-&gt;pushBackElement(reNode6);
+    rtxt-&gt;pushBackElement(reTxt7);
+    rtxt-&gt;pushBackElement(reNode8);
+    rtxt-&gt;insertElement(reImg9, 3);
+    
+    rtxt-&gt;setSizeType(SIZE_PERCENT);
+    rtxt-&gt;setSizePercent(Point(0.8, 0.3));
+    rtxt-&gt;setPosition(Point(getContentSize().width / 2, 80));
+    addChild(rtxt);
+    
+    // rich text show
+    auto rxShow = Label::createWithTTF(&quot;RichText show&quot;, &quot;pacifico.ttf&quot;, 30);
+    rxShow-&gt;setColor(Color3B::GRAY);
+    rxShow-&gt;setPosition(Point(getContentSize().width / 2, 40));
+    rxShow-&gt;setTag(Tag::TAG_RICHTEXTSHOW);
+    addChild(rxShow);
+    
+    // !!!: show richtext touch event in onTouchRichText
+}</string>
+	<key>UI-ImageView</key>
+	<string>{
+    auto nodeSprites = Node::create();
+    Point posCenter = NODE_CENTER(this);
+    
+    // imageView with local png (flower)
+    auto imv = ImageView::create(&quot;flower.png&quot;);
+    imv-&gt;setPosition(posCenter + Point(50, 150));
+    nodeSprites-&gt;addChild(imv);
+    
+    LOADPLIST(&quot;10003_move.plist&quot;);
+    
+    // imageView with plist (runner)
+    auto imvPlist = ImageView::create(&quot;10003_move_0000.png&quot;, UI_TEX_TYPE_PLIST);
+    imvPlist-&gt;setPosition(posCenter + Point(200, -50));
+    imvPlist-&gt;setTag(Tag::TAG_IMAGEVIEW);
+    nodeSprites-&gt;addChild(imvPlist);
+    
+    // imageView with small rect
+    auto imvRect = ImageViewExt::create(&quot;dragon.png&quot;, Rect(0.5, 0, 0.5, 1), SIZE_PERCENT);
+    imvRect-&gt;setPosition(Point(250, 250));
+    nodeSprites-&gt;addChild(imvRect);
+    
+    nodeSprites-&gt;setTag(Tag::TAG_NODESPRITE);
+    addChild(nodeSprites);
+    
+    // !!!: update texture(runner) in update
+    // !!!: loadTexture, not runAction
+    
+    // add sprite controller
+    addSpriteController();
+    
+    // !!!: change ImageView attribute by controller
+}</string>
+	<key>UI-Button</key>
+	<string>{
+    const int MenuAmount = 6;
+    const string Menu[] = {&quot;NewGame&quot;, &quot;Continue&quot;, &quot;Highscore&quot;, &quot;Help&quot;, &quot;About&quot;, &quot;MoreGame&quot;};
+    LOADPLIST(&quot;menu.plist&quot;);
+    Point pos = Point(250, getContentSize().height - 150);
+    
+    // button image (left)
+    for (int i = 0; i &lt; MenuAmount; i++) {
+        string frmNormal = StringUtils::format(&quot;menu_%i_%s.png&quot;, i, &quot;n&quot;);
+        string frmSelect = StringUtils::format(&quot;menu_%i_%s.png&quot;, i, &quot;s&quot;);
+        string frmDisable = StringUtils::format(&quot;menu_%i_%s.png&quot;, i, &quot;d&quot;);
+        
+        auto btnItem = Button::create();
+        btnItem-&gt;loadTextureNormal(frmNormal, UI_TEX_TYPE_PLIST);
+        btnItem-&gt;loadTexturePressed(frmSelect, UI_TEX_TYPE_PLIST);
+        btnItem-&gt;loadTextureDisabled(frmDisable, UI_TEX_TYPE_PLIST);
+        btnItem-&gt;setName(Menu[i].c_str());
+        BIND_LISTENER_TOUCH(btnItem, this, ManualDisplay::onTouchButton);
+        btnItem-&gt;setPosition(pos);
+        btnItem-&gt;setTag(i);
+        addChild(btnItem);
+        
+        pos.y -= 60;
+        if (i == 1) {
+            WIDGET_ENABEL(btnItem, false);
+        }
+    }
+    
+    pos = Point(getContentSize().width - 250, getContentSize().height - 150);
+    
+    // button text (right)
+    for (int i = 0; i &lt; MenuAmount; i++) {
+        auto btnItem = ButtonText::create(Menu[i], Color3B::GREEN, &quot;Marker Felt&quot;, 30);
+        btnItem-&gt;setName(Menu[i].c_str());
+        BIND_LISTENER_TOUCH(btnItem, this, ManualDisplay::onTouchButton);
+        btnItem-&gt;setPosition(pos);
+        addChild(btnItem);
+        
+        pos.y -= 60;
+    }
+    
+    // label to show button name
+    auto labShow = Label::createWithTTF(&quot;Touch Button&quot;, &quot;pacifico.ttf&quot;, 30);
+    labShow-&gt;setColor(Color3B::RED);
+    labShow-&gt;setPosition(Point(getContentSize().width / 2, getContentSize().height - 60));
+    labShow-&gt;setTag(Tag::TAG_BUTTONTITLE);
+    addChild(labShow);
+}</string>
+	<key>UI-LoadingBar</key>
+	<string>{
+    LOADPLIST(&quot;ui.plist&quot;);
+    Point pos = NODE_CENTER(this) + Point(0, 180);
+    float pad = 70;
+    
+    // loadingBar from left to right (row 1)
+    auto ldbLeft = LoadingBar::create();
+    ldbLeft-&gt;loadTexture(&quot;lodingFg.png&quot;, UI_TEX_TYPE_PLIST);
+    ldbLeft-&gt;setDirection(LoadingBarTypeLeft);
+    ldbLeft-&gt;setTag(Tag::TAG_LOADINGLEFT);
+    ldbLeft-&gt;setPosition(pos);
+    addChild(ldbLeft);
+    
+    pos.y -= pad;
+    
+    // loadingBar from right to left (row 2)
+    auto ldbRight = LoadingBar::create();
+    ldbRight-&gt;loadTexture(&quot;lodingFg.png&quot;, UI_TEX_TYPE_PLIST);
+    ldbRight-&gt;setDirection(LoadingBarTypeRight);
+    ldbRight-&gt;setTag(Tag::TAG_LOADINGRIGHT);
+    ldbRight-&gt;setPosition(pos);
+    addChild(ldbRight);
+    
+    pos.y -= pad;
+    
+    // loadingBar ext from left to right (row 3)
+    auto ldbExtL = LoadingBarExt::create(&quot;lodingBg.png&quot;, &quot;lodingFg.png&quot;, UI_TEX_TYPE_PLIST);
+    ldbExtL-&gt;setDirection(LoadingBarTypeLeft);
+    ldbExtL-&gt;setTag(Tag::TAG_LOADINGEXTL);
+    ldbExtL-&gt;setPosition(pos);
+    addChild(ldbExtL);
+    
+    pos.y -= pad;
+    
+    // loadingBar ext from right to left with label (row 4)
+    auto ldbExtR = LoadingBarExt::create(&quot;lodingBg.png&quot;, &quot;lodingFg.png&quot;, UI_TEX_TYPE_PLIST, 0, &quot;Marker Felt&quot;, Color3B::GREEN, 30);
+    ldbExtR-&gt;setDirection(LoadingBarTypeRight);
+    ldbExtR-&gt;setTag(Tag::TAG_LOADINGEXTR);
+    ldbExtR-&gt;setPosition(pos);
+    addChild(ldbExtR);
+    
+    pos.y -= pad;
+    
+    // loadingBar ext from left to right with label under bar (row 5)
+    auto ldbExtLL = LoadingBarExt::create(&quot;lodingBg.png&quot;, &quot;lodingFg.png&quot;, UI_TEX_TYPE_PLIST);
+    Label * lab = Label::createWithSystemFont(&quot;0/100&quot;, &quot;pacifico.ttf&quot;, 30);
+    lab-&gt;setColor(Color3B::RED);
+    lab-&gt;enableShadow();
+    ldbExtLL-&gt;setLabelProgress(lab);
+    ldbExtLL-&gt;setLabelProgressPosition(Point(0.5, -0.5), SIZE_PERCENT);
+    ldbExtLL-&gt;setLabelProgressVisible(true);
+    ldbExtLL-&gt;setDirection(LoadingBarTypeLeft);
+    ldbExtLL-&gt;setTag(Tag::TAG_LOADINGEXTLL);
+    ldbExtLL-&gt;setPosition(pos);
+    addChild(ldbExtLL);
+    
+    pos.y -= pad;
+    
+    // loadingBar ext from right to left with callback (row 6)
+    auto ldbExt = LoadingBarExt::create(&quot;lodingBg.png&quot;, &quot;lodingFg.png&quot;, UI_TEX_TYPE_PLIST);
+    ldbExt-&gt;setDirection(LoadingBarTypeRight);
+    ldbExt-&gt;setTag(Tag::TAG_LOADINGEXT);
+    ldbExt-&gt;setPosition(pos);
+    ldbExt-&gt;setCallBack([&amp;](Ref * pSender) {
+        LoadingBarExt * loadingBar = static_cast&lt;LoadingBarExt *&gt;(pSender);
+        ParticleExplosion * eff = static_cast&lt;ParticleExplosion *&gt;(loadingBar-&gt;getChildByTag(Tag::TAG_EFFECT));
+        if (!eff) {
+            eff = ParticleExplosion::create();
+            eff-&gt;setPosition(NODE_CENTER(loadingBar));
+            eff-&gt;setTag(Tag::TAG_EFFECT);
+            loadingBar-&gt;addChild(eff);
+        }
+        eff-&gt;resetSystem();
+    });
+    addChild(ldbExt);
+}</string>
+	<key>UI-CheckBox</key>
+	<string>{
+    LOADPLIST(&quot;ui.plist&quot;);
+    Point pos = NODE_CENTER(this) + Point(0, 150);
+    float pad = 70;
+    
+    // checkBox tick (tick)
+    auto cbTick = CheckBox::create();
+    cbTick-&gt;loadTextureBackGround(&quot;checkBg.png&quot;, UI_TEX_TYPE_PLIST);
+    cbTick-&gt;loadTextureBackGroundSelected(&quot;checkBg.png&quot;, UI_TEX_TYPE_PLIST);
+    cbTick-&gt;loadTextureFrontCross(&quot;checkFg.png&quot;, UI_TEX_TYPE_PLIST);
+    cbTick-&gt;setSelectedState(true);
+    cbTick-&gt;setPosition(pos);
+    cbTick-&gt;setName(&quot;Tick CheckBox&quot;);
+    BIND_LISTENER_CB(cbTick, this, ManualDisplay::onTouchCheckBox);
+    addChild(cbTick);
+    
+    pos.y -= pad;
+    
+    // checkBox star (star)
+    auto cbStar = CheckBox::create(&quot;checBg.png&quot;, &quot;checBg.png&quot;, &quot;checFg.png&quot;, &quot;checFg.png&quot;, &quot;checFg.png&quot;, UI_TEX_TYPE_PLIST);
+    cbStar-&gt;setSelectedState(true);
+    cbStar-&gt;setPosition(pos);
+    cbStar-&gt;setName(&quot;Star CheckBox&quot;);
+    BIND_LISTENER_CB(cbStar, this, ManualDisplay::onTouchCheckBox);
+    addChild(cbStar);
+    
+    pos.y -= pad;
+    
+    // checkBox tick with title (Accept the conditions)
+    auto cbTitle = CheckBoxExt::create(&quot;checkBg.png&quot;, &quot;checkFg.png&quot;, UI_TEX_TYPE_PLIST,
+                                       &quot;Marker Felt&quot;, Color3B::BLUE, 30, &quot;Accept the conditions&quot;);
+    cbTitle-&gt;setPosition(pos);
+    cbTitle-&gt;setName(&quot;Accept the conditions&quot;);
+    cbTitle-&gt;setTag(Tag::TAG_CHECKBOXTICK);
+    BIND_LISTENER_CB(cbTitle, this, ManualDisplay::onTouchCheckBox);
+    addChild(cbTitle);
+    
+    pos.y -= pad;
+    
+    // combination (combination)
+    auto labTitle = Label::createWithTTF(&quot;Combination&quot;, &quot;pacifico.ttf&quot;, 30);
+    labTitle-&gt;setColor(Color3B::GREEN);
+    auto cbComb = CheckBoxExt::create(cbStar, labTitle);
+    cbComb-&gt;setPosition(pos);
+    cbComb-&gt;setName(&quot;Combination&quot;);
+    cbComb-&gt;setTag(Tag::TAG_CHECKBOXSTAR);
+    BIND_LISTENER_CB(cbComb, this, ManualDisplay::onTouchCheckBox);
+    addChild(cbComb);
+    
+    // radio group (left)
+    const string Menu[] = {&quot;NewGame&quot;, &quot;Continue&quot;, &quot;Highscore&quot;, &quot;Help&quot;, &quot;About&quot;, &quot;MoreGame&quot;};
+    pos = Point(100, getContentSize().height - 150);
+    auto radioGroup = RadioGroup::create(&quot;checkBg.png&quot;, &quot;checkFg.png&quot;, UI_TEX_TYPE_PLIST, &quot;Marker Felt&quot;, Color3B::BLACK, 30, 6, Menu,
+                                         [&amp;](Ref * pSender) {
+                                             int index = dynamic_cast&lt;RadioGroup *&gt;(pSender)-&gt;getSelectIndex();
+                                             CheckBoxExt * cbExt = dynamic_cast&lt;RadioGroup *&gt;(pSender)-&gt;getSelectItem();
+                                             string tip = StringUtils::format(&quot;Radio at %i [ %s ]&quot;, index, cbExt-&gt;getName());
+                                             auto label = getChildByTag(Tag::TAG_SELECTSHOW);
+                                             if (label) {
+                                                 dynamic_cast&lt;Label *&gt;(label)-&gt;setString(tip);
+                                             }
+                                         });
+    radioGroup-&gt;setPosition(pos);
+    addChild(radioGroup);
+    
+    // label to show checkBox state
+    auto label = Label::createWithSystemFont(&quot;Check Show&quot;, &quot;Marker Felt&quot;, 30);
+    label-&gt;setTag(Tag::TAG_SELECTSHOW);
+    label-&gt;setColor(Color3B::MAGENTA);
+    label-&gt;setPosition(Point(getContentSize().width / 2, 50));
+    addChild(label);
+}</string>
+	<key>UI-Slide</key>
+	<string>{
+    LOADPLIST(&quot;ui.plist&quot;);
+    Point pos = NODE_CENTER(this) + Point(-200, 180);
+    float pad = 70;
+    
+    // slider normal (left row 1)
+    auto sld = Slider::create();
+    sld-&gt;loadBarTexture(&quot;sliderBg.png&quot;, UI_TEX_TYPE_PLIST);
+    sld-&gt;loadSlidBallTextures(&quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sld-&gt;setPercent(50);
+    sld-&gt;setPosition(pos);
+    addChild(sld);
+    
+    pos.y -= pad;
+    
+    // slider with progress bar (left row 2)
+    auto sldPrg = Slider::create();
+    sldPrg-&gt;loadBarTexture(&quot;sliderBg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrg-&gt;loadProgressBarTexture(&quot;switchFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrg-&gt;loadSlidBallTextures(&quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrg-&gt;setPercent(50);
+    sldPrg-&gt;setPosition(pos);
+    sldPrg-&gt;setName(&quot;SliderBar&quot;);
+    BIND_LISTENER_SL(sldPrg, this, ManualDisplay::onTouchSlider);
+    addChild(sldPrg);
+    
+    pos = Point(120, 200);
+    
+    // vertical slider with progress bar (left row 3 col 1)
+    // also control another 2 slider
+    auto sldPrgAll = Slider::create();
+    sldPrgAll-&gt;loadBarTexture(&quot;sliderBg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgAll-&gt;loadProgressBarTexture(&quot;switchFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgAll-&gt;loadSlidBallTextures(&quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgAll-&gt;setPercent(50);
+    sldPrgAll-&gt;setPosition(pos);
+    sldPrgAll-&gt;setRotation(-90);
+    sldPrgAll-&gt;setTag(Tag::TAG_SLIDERALL);
+    sldPrgAll-&gt;setName(&quot;sldPrgAll&quot;);
+    BIND_LISTENER_SL(sldPrgAll, this, ManualDisplay::onTouchSlider);
+    addChild(sldPrgAll);
+    
+    pos.x += pad;
+    
+    // vertical slider with progress bar (left row 3 col 2)
+    auto sldPrgLeft = Slider::create();
+    sldPrgLeft-&gt;loadBarTexture(&quot;sliderBg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgLeft-&gt;loadProgressBarTexture(&quot;switchFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgLeft-&gt;loadSlidBallTextures(&quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgLeft-&gt;setPercent(50);
+    sldPrgLeft-&gt;setPosition(pos);
+    sldPrgLeft-&gt;setRotation(-90);
+    sldPrgLeft-&gt;setTag(Tag::TAG_SLIDERLEFT);
+    sldPrgLeft-&gt;setName(&quot;sldPrgLeft&quot;);
+    BIND_LISTENER_SL(sldPrgLeft, this, ManualDisplay::onTouchSlider);
+    addChild(sldPrgLeft);
+    
+    pos.x += pad;
+    
+    // vertical slider with progress bar (left row 3 col 3)
+    auto sldPrgRight = Slider::create();
+    sldPrgRight-&gt;loadBarTexture(&quot;sliderBg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgRight-&gt;loadProgressBarTexture(&quot;switchFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgRight-&gt;loadSlidBallTextures(&quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, &quot;sliderFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldPrgRight-&gt;setPercent(50);
+    sldPrgRight-&gt;setPosition(pos);
+    sldPrgRight-&gt;setRotation(-90);
+    sldPrgRight-&gt;setTag(Tag::TAG_SLIDERRIGHT);
+    sldPrgRight-&gt;setName(&quot;sldPrgRight&quot;);
+    BIND_LISTENER_SL(sldPrgRight, this, ManualDisplay::onTouchSlider);
+    addChild(sldPrgRight);
+    
+    pos = NODE_CENTER(this) + Point(150, 180);
+    
+    // slider bar with fine progress (right row 1)
+    auto sldFine = SliderFine::create(&quot;sliderBg.png&quot;, &quot;sliderFg.png&quot;, &quot;&quot;, UI_TEX_TYPE_PLIST);
+    sldFine-&gt;setPercent(50);
+    sldFine-&gt;setPosition(pos);
+    addChild(sldFine);
+    
+    pos.y -= pad;
+    
+    // set fine position and fine is touch disable (right row 2)
+    auto sldFine2 = SliderFine::create(&quot;sliderBg.png&quot;, &quot;sliderFg.png&quot;, &quot;switchFg.png&quot;, UI_TEX_TYPE_PLIST, &quot;Marker Felt&quot;, Color3B::GREEN, 30);
+    sldFine2-&gt;setPercent(50);
+    sldFine2-&gt;setTextFieldTouchEnable(false);
+    sldFine2-&gt;setTextFieldPosition(Point(0.5, -0.8), SIZE_PERCENT);
+    sldFine2-&gt;setPosition(pos);
+    addChild(sldFine2);
+    
+    pos.y -= pad;
+    
+    // slider bar with check box (right row 3)
+    auto sldCheck = SliderCheck::create(&quot;sliderBg.png&quot;, &quot;sliderFg.png&quot;, &quot;&quot;, &quot;checkBg.png&quot;, &quot;checkFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldCheck-&gt;setPercent(50);
+    sldCheck-&gt;setPosition(pos);
+    addChild(sldCheck);
+    
+    pos.y -= pad;
+    
+    // set check postion (right row 4)
+    auto sldCheck2 = SliderCheck::create(&quot;sliderBg.png&quot;, &quot;sliderFg.png&quot;, &quot;switchFg.png&quot;, &quot;checkBg.png&quot;, &quot;checkFg.png&quot;, UI_TEX_TYPE_PLIST);
+    sldCheck2-&gt;setPercent(50);
+    sldCheck2-&gt;setCheckBoxPosition(Point(1.2, 0.5), SIZE_PERCENT);
+    sldCheck2-&gt;setPosition(pos);
+    addChild(sldCheck2);
+    
+    pos.y -= pad;
+    
+    // combination (right row 5)
+    auto textField = TextField::create(&quot;combination&quot;, &quot;Marker Felt&quot;, 30);
+    textField-&gt;setColor(Color3B::ORANGE);
+    textField-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE_LEFT);
+    auto sldComb = SliderFine::create(sld, textField);
+    sldComb-&gt;setPosition(pos);
+    addChild(sldComb);
+    
+    // label to show slider progress
+    auto label = Label::createWithSystemFont(&quot;Slider Show&quot;, &quot;Marker Felt&quot;, 30);
+    label-&gt;setTag(Tag::TAG_SELECTSHOW);
+    label-&gt;setColor(Color3B::MAGENTA);
+    label-&gt;setPosition(Point(getContentSize().width / 2, 50));
+    addChild(label);
+}</string>
+	<key>UI-ScrollView</key>
+	<string>{
+    Size size = Size(300, 400);
+    Point pos = Point(100, 200);
+    
+    // scrollView with out bounce (top left)
+    auto sv = ui::ScrollView::create();
+    sv-&gt;setSize(size);
+    sv-&gt;setPosition(pos);
+    auto sprMan = Sprite::create(&quot;man.png&quot;);
+    auto imvWolf = ImageView::create(&quot;wolf.png&quot;);
+    sprMan-&gt;setPosition(Point(0, 0));
+    imvWolf-&gt;setPosition(Point(0, sprMan-&gt;getContentSize().height));
+    sv-&gt;addChild(sprMan);
+    sv-&gt;addChild(imvWolf);
+    float innerHeight = sprMan-&gt;getContentSize().height + imvWolf-&gt;getContentSize().height;
+    sv-&gt;setInnerContainerSize(Size(size.width, innerHeight)); // necessary
+    addChild(sv);
+    
+    pos.x += 500;
+    
+    // scrollView with bounce (top right)
+    auto svBounce = ui::ScrollView::create();
+    svBounce-&gt;setSize(size);
+    svBounce-&gt;setPosition(pos);
+    svBounce-&gt;setDirection(SCROLLVIEW_DIR_VERTICAL); // default
+    svBounce-&gt;setBounceEnabled(true); // bounce
+    auto sprFlower = Sprite::create(&quot;flower.png&quot;);
+    auto imvStar = ImageView::create(&quot;star.png&quot;);
+    sprFlower-&gt;setPosition(Point(0, 0));
+    imvStar-&gt;setPosition(Point(0, sprFlower-&gt;getContentSize().height));
+    svBounce-&gt;addChild(sprFlower);
+    svBounce-&gt;addChild(imvStar);
+    innerHeight = sprFlower-&gt;getContentSize().height + imvStar-&gt;getContentSize().height;
+    svBounce-&gt;setInnerContainerSize(Size(size.width, innerHeight)); // necessary
+    addChild(svBounce);
+    
+    auto svBoth = ui::ScrollView::create();
+    svBoth-&gt;setSize(Size(300, 300));
+    svBoth-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE);
+    svBoth-&gt;setPosition(NODE_CENTER(this) + Point(0, 100));
+    svBoth-&gt;setDirection(SCROLLVIEW_DIR_BOTH);
+    auto sprDragon = Sprite::create(&quot;dragon.png&quot;);
+    sprDragon-&gt;setScale(2);
+    sprDragon-&gt;setPosition(NODE_CENTER(svBoth));
+    svBoth-&gt;addChild(sprDragon);
+    svBoth-&gt;setInnerContainerSize(sprDragon-&gt;getContentSize());
+    svBoth-&gt;jumpToPercentBothDirection(Point(50, 50));
+    BIND_LISTENER_SV(svBoth, this, ManualDisplay::onTouchScollView); // add event listener
+    addChild(svBoth);
+    
+    // scrollView HORIZONTAL (bottom)
+    auto svH = ui::ScrollView::create();
+    svH-&gt;setSize(Size(600, 100));
+    svH-&gt;setPosition(Point(100, 50));
+    pos = Point(32, 32);
+    for (int i = 0; i &lt; 10; i++) {
+        auto btn = Button::create(&quot;white.png&quot;);
+        btn-&gt;setColor(Color3B::GRAY);
+        btn-&gt;setTitleText(StringUtils::format(&quot;%i&quot;, i + 1));
+        btn-&gt;setTitleColor(Color3B::GREEN);
+        btn-&gt;setTitleFontSize(25);
+        btn-&gt;setPosition(pos);
+        svH-&gt;addChild(btn);
+        pos.x += 80;
+    }
+    svH-&gt;setInnerContainerSize(Size(800, 100));
+    svH-&gt;setDirection(SCROLLVIEW_DIR_HORIZONTAL);
+    svH-&gt;setBounceEnabled(true);
+    addChild(svH);
+    
+    // label to show info
+    auto label = Label::createWithSystemFont(&quot;Scroll Show&quot;, &quot;Marker Felt&quot;, 30);
+    label-&gt;setTag(Tag::TAG_SELECTSHOW);
+    label-&gt;setColor(Color3B::MAGENTA);
+    label-&gt;setPosition(Point(getContentSize().width / 2, svBoth-&gt;getPosition().y - 190));
+    addChild(label);
+}</string>
+	<key>UI-ListView</key>
+	<string>{
+    const int ListAmount = 20;
+    Point pos = NODE_CENTER(this);
+    Size size = Size(200, 300);
+
+    // list normal (left)
+    auto list = ListView::create();
+    for (int i = 0; i &lt; ListAmount; i++) {
+        string title = StringUtils::format(&quot;ListItem-%i&quot;, (i + 1));
+        auto label = Text::create(title, &quot;Marker Felt&quot;, 30);
+        label-&gt;setColor(Color3B::BLUE);
+        label-&gt;ignoreContentAdaptWithSize(false);
+        label-&gt;setSize(Size(200, 30));
+        list-&gt;pushBackCustomItem(label);
+    }
+    list-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE);
+    list-&gt;ignoreAnchorPointForPosition(false);
+    list-&gt;setSize(size);
+    list-&gt;setPosition(pos - Point(250, 0));
+    list-&gt;setTouchEnabled(true);
+    BIND_LISTENER_LV(list, this, ManualDisplay::onTouchListView);
+    addChild(list);
+    
+    // list with color bg (middle)
+    auto listColor = ListView::create();
+    for (int i = 0; i &lt; ListAmount; i++) {
+        string title = StringUtils::format(&quot;ListItem-%i&quot;, (i + 1));
+        auto label = Text::create(title, &quot;Marker Felt&quot;, 30);
+        label-&gt;setColor(Color3B::GREEN);
+        listColor-&gt;pushBackCustomItem(label);
+    }
+    listColor-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE);
+    listColor-&gt;setSize(size);
+    listColor-&gt;setBounceEnabled(true);
+    listColor-&gt;setBackGroundColorType(LAYOUT_COLOR_GRADIENT);
+    listColor-&gt;setBackGroundColor(Color3B::YELLOW, Color3B::RED);
+    listColor-&gt;setPosition(pos);
+    BIND_LISTENER_LV(listColor, this, ManualDisplay::onTouchListView);
+    addChild(listColor);
+    
+    // list with image bg (right)
+    auto listImg = ListView::create();
+    for (int i = 0; i &lt; ListAmount; i++) {
+        string title = StringUtils::format(&quot;ListItem-%i&quot;, (i + 1));
+        auto label = Text::create(title, &quot;Marker Felt&quot;, 30);
+        label-&gt;setColor(Color3B::MAGENTA);
+        listImg-&gt;pushBackCustomItem(label);
+    }
+    listImg-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE);
+    listImg-&gt;setSize(size);
+    listImg-&gt;setBounceEnabled(true);
+    listImg-&gt;setBackGroundImage(&quot;flower.png&quot;);
+    listImg-&gt;setPosition(pos + Point(250, 0));
+    listImg-&gt;setClippingType(LAYOUT_CLIPPING_STENCIL); // default
+    BIND_LISTENER_LV(listImg, this, ManualDisplay::onTouchListView); // add event listener
+    addChild(listImg);
+
+    // label to show info
+    auto label = Label::createWithSystemFont(&quot;#BUG-ListenerDisable&quot;, &quot;Marker Felt&quot;, 30);
+    label-&gt;setTag(Tag::TAG_SELECTSHOW);
+    label-&gt;setColor(Color3B::RED);
+    label-&gt;setPosition(Point(getContentSize().width / 2, 50));
+    addChild(label);
+}</string>
+	<key>UI-PageView</key>
+	<string>{
+    Size size = Size(300, 300);
+    Point pos = NODE_CENTER(this) - Point(200, 0);
+    
+    // pageview with color layout
+    auto pvLayout = PageView::create();
+    pvLayout-&gt;ignoreAnchorPointForPosition(false); // default is true
+    pvLayout-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE);
+    pvLayout-&gt;setSize(size);
+    for (int i = 0; i &lt; 8; i++) {
+        Color3B color = Color3B(RANDOM_CC(0, 255), RANDOM_CC(0, 255), RANDOM_CC(0, 255));
+        auto layout = Layout::create();
+        layout-&gt;setSize(size);
+        layout-&gt;setBackGroundColor(color);
+        layout-&gt;setBackGroundColorType(LAYOUT_COLOR_SOLID);
+        pvLayout-&gt;addPage(layout);
+    }
+    pvLayout-&gt;setPosition(pos);
+    addChild(pvLayout);
+    
+    pos.x += 400;
+    LOADPLIST(&quot;10003_move.plist&quot;);
+    
+    // pageview add widget
+    auto pvWidget = PageView::create();
+    pvWidget-&gt;ignoreAnchorPointForPosition(false); // default is true
+    pvWidget-&gt;setAnchorPoint(Point::ANCHOR_MIDDLE);
+    pvWidget-&gt;setSize(size);
+    for (int i = 0; i &lt; 8; i++) {
+        string file = StringUtils::format(&quot;10003_move_000%i.png&quot;, i);
+        auto imv = ImageView::create(file.c_str(), UI_TEX_TYPE_PLIST);
+        imv-&gt;setPosition(NODE_CENTER(pvWidget));
+        pvWidget-&gt;addWidgetToPage(imv, i, true);
+    }
+    pvWidget-&gt;setPosition(pos);
+    BIND_LISTENER_PV(pvWidget, this, ManualDisplay::onTouchPageView); // add event listener
+    addChild(pvWidget);
+    
+    // label to show info
+    auto label = Label::createWithSystemFont(&quot;Pageview Show&quot;, &quot;Marker Felt&quot;, 30);
+    label-&gt;setTag(Tag::TAG_SELECTSHOW);
+    label-&gt;setColor(Color3B::MAGENTA);
+    label-&gt;setPosition(Point(getContentSize().width / 2, 50));
+    addChild(label);
+}</string>
+	<key>UI-Box</key>
+	<string>{
+    // HBox (bottom)
+    auto hbox = HBox::create();
+    for (int i = 0; i &lt; 5; i++) {
+        Color3B color = Color3B(RANDOM_CC(0, 255), RANDOM_CC(0, 255), RANDOM_CC(0, 255));
+        auto btn = Button::create(&quot;white.png&quot;);
+        btn-&gt;setColor(color);
+        btn-&gt;ignoreContentAdaptWithSize(false);
+        btn-&gt;setSize(Size(RANDOM_CC(50, 100), 64));
+        hbox-&gt;addChild(btn);
+    }
+    hbox-&gt;setPosition(Point(200, 150));
+    addChild(hbox);
+    
+    // VBox (left)
+    auto vbox = VBox::create();
+    for (int i = 0; i &lt; 5; i++) {
+        Color3B color = Color3B(RANDOM_CC(0, 255), RANDOM_CC(0, 255), RANDOM_CC(0, 255));
+        auto btn = Button::create(&quot;white.png&quot;);
+        btn-&gt;setColor(color);
+        btn-&gt;ignoreContentAdaptWithSize(false);
+        btn-&gt;setSize(Size(64, RANDOM_CC(50, 100)));
+        vbox-&gt;addChild(btn);
+    }
+    vbox-&gt;setPosition(Point(100, 450));
+    addChild(vbox);
+    
+    // Relative Box (center)
+    auto rbox = RelativeBox::create();
+    for (int i = 0; i &lt; 5; i++) {
+        Color3B color = Color3B(RANDOM_CC(0, 255), RANDOM_CC(0, 255), RANDOM_CC(0, 255));
+        auto btn = Button::create(&quot;white.png&quot;);
+        btn-&gt;setColor(color);
+        btn-&gt;ignoreContentAdaptWithSize(false);
+        btn-&gt;setSize(Size((5 - i) * 50, (5 - i) * 50));
+        rbox-&gt;addChild(btn);
+    }
+    rbox-&gt;setPosition(Point(200, 450));
+    addChild(rbox);
+}</string>
+	<key>CocosBuilder</key>
+	<string>{
+    auto layer = CCBLayer::layer();
+    layer-&gt;ignoreAnchorPointForPosition(false);
+    layer-&gt;setPosition(NODE_CENTER(this));
+    addChild(layer);
+}</string>
+	<key>CocoStudio</key>
+	<string>{
+    auto layer = CCSLayer::layer();
+    layer-&gt;setPosition(Point(-120, -100));
+    addChild(layer);
+    
+    /* Replace res.plist and res.png export from CocosStudio 
+     with res.plist and res.pvr.ccz publish from TexturePacker */
+}</string>
+	<key>TileMap</key>
+	<string>{
+    auto tileMap = TMXTiledMap::create(&quot;test.tmx&quot;);
+    addChild(tileMap);
+    
+    auto objGroup = tileMap-&gt;getObjectGroup(&quot;tables&quot;);
+    if (objGroup) {
+        auto objRect = objGroup-&gt;getObject(&quot;objRect&quot;);
+        float x = objRect[&quot;x&quot;].asFloat();
+        float y = objRect[&quot;y&quot;].asFloat();
+        float w = objRect[&quot;width&quot;].asFloat();
+        float h = objRect[&quot;height&quot;].asFloat();
+        int r = objRect[&quot;r&quot;].asInt();
+        int g = objRect[&quot;g&quot;].asInt();
+        int b = objRect[&quot;b&quot;].asInt();
+        int a = objRect[&quot;a&quot;].asInt();
+        
+        auto drawNode = DrawNodeExt::create();
+        drawNode-&gt;drawRect(Rect(x, y, w, h), 2, Color4F(Color4B(r, g, b, a)));
+        tileMap-&gt;addChild(drawNode);
+    }
+}</string>
+	<key>Particle</key>
+	<string>{
+    // black bg
+    auto bg = Layout::create();
+    bg-&gt;ignoreContentAdaptWithSize(false);
+    bg-&gt;setSize(getSize());
+    bg-&gt;setBackGroundColor(Color3B::BLACK);
+    bg-&gt;setBackGroundColorType(LAYOUT_COLOR_SOLID);
+    addChild(bg);
+    
+    // rain
+    auto pRain = ParticleRain::create();
+    addChild(pRain);
+    
+    // snow
+    auto pSnow = ParticleSnow::create();
+    addChild(pSnow);
+    
+    // fire
+    auto pFire = ParticleFire::create();
+    addChild(pFire);
+    
+    // sun
+    auto pSun = ParticleSun::create();
+    addChild(pSun);
+    
+    // galaxy
+    auto pGalaxy = ParticleGalaxy::create();
+    pGalaxy-&gt;setPosition(Point(200, 200));
+    addChild(pGalaxy);
+    
+    // flower
+    auto pFlower = ParticleFlower::create();
+    pFlower-&gt;setPosition(Point(200, 400));
+    addChild(pFlower);
+    
+    // meteor
+    auto pMeteor = ParticleMeteor::create();
+    Point posStart = Point(0, 800);
+    Point posEnd = Point(900, -400);
+    pMeteor-&gt;setPosition(posStart);
+    pMeteor-&gt;runAction(RepeatForever::create(Sequence::createWithTwoActions(MoveTo::create(3, posEnd), Place::create(posStart))));
+    addChild(pMeteor);
+    
+    // spirial
+    auto pSpiral = ParticleSpiral::create();
+    pSpiral-&gt;setPosition(Point(300, 300));
+    addChild(pSpiral);
+    
+    // explosion
+    auto pExplosion = ParticleExplosion::create();
+    pExplosion-&gt;setPosition(Point(300, 300));
+    addChild(pExplosion);
+    
+    // smoke
+    auto pSmoke = ParticleSmoke::create();
+    pSmoke-&gt;setPosition(Point(600, 100));
+    addChild(pSmoke);
+    
+    // particle from plist
+    auto pDIY = CCParticleSystemQuad::create(&quot;eliminate.plist&quot;);
+    if (pDIY) {
+        pDIY-&gt;setPosition(Point(600, 300));
+        pDIY-&gt;setStartColor(Color4F(Color3B::GREEN));
+        pDIY-&gt;setEndColor(Color4F(Color3B::ORANGE));
+        addChild(pDIY);
+    }
+    
+    // self particle with action (useful)
+    auto btnRect = Button::create(&quot;white.png&quot;);
+    btnRect-&gt;ignoreContentAdaptWithSize(false);
+    btnRect-&gt;setSize(Size(100, 100));
+    btnRect-&gt;setPosition(Point(650, 350));
+    btnRect-&gt;setColor(Color3B::GREEN);
+    btnRect-&gt;setTitleText(&quot;👻&quot;);
+    btnRect-&gt;setTitleFontSize(50);
+    addChild(btnRect);
+    
+    auto pFocus = CCParticleSystemQuad::create(&quot;focus.plist&quot;);
+    if (pFocus) {
+        auto pArray = PointArray::create(4);
+        pArray-&gt;addControlPoint(Point(600 + 5, 300 + 5));
+        pArray-&gt;addControlPoint(Point(600 + 5, 400 - 5));
+        pArray-&gt;addControlPoint(Point(700 - 5, 400 - 5));
+        pArray-&gt;addControlPoint(Point(700 - 5, 300 + 5));
+        pArray-&gt;addControlPoint(Point(600 + 5, 300 + 5));
+        
+        auto action = CardinalSplineTo::create(5, pArray, 0);
+        pFocus-&gt;setPosition(Point(600 + 5, 300 + 5));
+        pFocus-&gt;runAction(RepeatForever::create(action));
+        addChild(pFocus);
+    }
+}</string>
+	<key>Action</key>
+	<string>{
+    Point pos = NODE_CENTER(this);
+    
+    // add action player
+    auto sprMan = Sprite::create(&quot;man.png&quot;);
+    sprMan-&gt;setPosition(pos - Point(200, -100));
+    addChild(sprMan, 0, Tag::TAG_ACTOR_MAN);
+    
+    auto imvWolf = ImageView::create(&quot;wolf.png&quot;);
+    imvWolf-&gt;setPosition(pos + Point(200, 100));
+    addChild(imvWolf, 0, Tag::TAG_ACTOR_WOLF);
+    
+    // add action controller
+    addActionController();
+    
+    // !!!: change action by controller
+}</string>
+	<key>Connect</key>
+	<string>{
+    // Http request (top)
+    string checkURL = &quot;http://mszg.zoman.cn/GetVersion.jsp?version=58&amp;appVersion=1.0&amp;platform=2&amp;device=2&quot;;
+    float posX = getContentSize().width / 2;
+    float posY = getContentSize().height - 50;
+    
+    auto labHttp = Label::createWithSystemFont(&quot;HttpRequest&quot;, &quot;Marker Felt&quot;, 30);
+    labHttp-&gt;setColor(Color3B::ORANGE);
+    labHttp-&gt;setPosition(Point(posX, posY));
+    addChild(labHttp);
+    
+    posY -= 60;
+    
+    auto labURL = Label::createWithSystemFont(checkURL, &quot;Helvetica&quot;, 20);
+    labURL-&gt;setColor(Color3B::BLUE);
+    labURL-&gt;setPosition(Point(posX, posY));
+    labURL-&gt;setDimensions(500, 60);
+    addChild(labURL);
+    
+    posY -= 40;
+    
+    auto menuItem = MenuItemFont::create(&quot;Send&quot;);
+    menuItem-&gt;setFontSize(40);
+    menuItem-&gt;setColor(Color3B::BLUE);
+    menuItem-&gt;setCallback([&amp;](Ref * pSender) {
+        auto request = new HttpRequest();
+        if (request) {
+            string checkURL = &quot;http://mszg.zoman.cn/GetVersion.jsp?version=58&amp;appVersion=1.0&amp;platform=2&amp;device=2&quot;;
+            request-&gt;setUrl(checkURL.c_str());
+            request-&gt;setRequestType(HttpRequest::Type::GET);
+            request-&gt;setResponseCallback(this, httpresponse_selector(ManualDisplay::onHttpRequstCallback));
+            request-&gt;setTag(&quot;Connect&quot;);
+            HttpClient::getInstance()-&gt;send(request);
+            request-&gt;release();
+        }
+    });
+    auto menu = Menu::create(menuItem, nullptr);
+    menu-&gt;setPosition(Point(posX, posY));
+    addChild(menu);
+    
+    posY -= 50;
+    
+    auto labRet = Label::createWithSystemFont(&quot;response&quot;, &quot;Helvetica&quot;, 20);
+    labRet-&gt;setColor(Color3B::GRAY);
+    labRet-&gt;setPosition(Point(posX, posY));
+    labRet-&gt;setAlignment(TextHAlignment::CENTER, TextVAlignment::TOP);
+    labRet-&gt;setDimensions(500, 60);
+    labRet-&gt;setTag(Tag::TAG_SELECTSHOW);
+    addChild(labRet);
+    
+    posY -= 80;
+    
+    // TCP Socket (Bottom)
+    auto labSocket = Label::createWithSystemFont(&quot;Socket&quot;, &quot;Marker Felt&quot;, 30);
+    labSocket-&gt;setColor(Color3B::ORANGE);
+    labSocket-&gt;setPosition(Point(posX, posY));
+    addChild(labSocket);
+    
+    posY -= 50;
+    
+    auto labIP = Label::createWithSystemFont(&quot;113.108.221.174:30001&quot;, &quot;Helvetica&quot;, 30);
+    labIP-&gt;setColor(Color3B::BLUE);
+    labIP-&gt;setPosition(Point(posX, posY));
+    addChild(labIP);
+    
+    posY -= 70;
+    
+    auto menuItemConn = MenuItemFont::create(&quot;Connect&quot;);
+    menuItemConn-&gt;setFontSize(40);
+    menuItemConn-&gt;setColor(Color3B::GREEN);
+    menuItemConn-&gt;setCallback([&amp;](Ref * pSender) {
+        string ip = &quot;113.108.221.174&quot;;
+        int port = 30001;
+        AppClient * client = AppConnect::client();
+        if (tick &gt; 0) {
+            client-&gt;resumeConnect();
+        } else {
+            client-&gt;startServer(ip, port);
+        }
+        client-&gt;heartbeatEnabel = true;
+        tick = 1;
+        currFrame = 1;
+    });
+    auto menuItemStop = MenuItemFont::create(&quot;Stop&quot;);
+    menuItemStop-&gt;setFontSize(40);
+    menuItemStop-&gt;setColor(Color3B::RED);
+    menuItemStop-&gt;setCallback([&amp;](Ref * pSender) {
+        currFrame = 0;
+        AppConnect::stopConnect();
+    });
+    auto menuConn = Menu::create(menuItemConn, menuItemStop, nullptr);
+    menuConn-&gt;setPosition(Point(posX, posY));
+    menuConn-&gt;alignItemsVerticallyWithPadding(5);
+    addChild(menuConn);
+}</string>
+	<key>OtherMore</key>
+	<string>=== comming soon ===</string>
+</dict>
+</plist>

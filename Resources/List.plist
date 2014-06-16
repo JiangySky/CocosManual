@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<string>Scene</string>
+	<string>Layer</string>
+	<string>LayerColor</string>
+	<string>LayerGradient</string>
+	<string>LayerMultiplex</string>
+	<string>Sprite</string>
+	<string>Label</string>
+	<string>Menu</string>
+	<string>UI-Layout</string>
+	<string>UI-Text</string>
+	<string>UI-ImageView</string>
+	<string>UI-Button</string>
+	<string>UI-LoadingBar</string>
+	<string>UI-CheckBox</string>
+	<string>UI-Slide</string>
+	<string>UI-ScrollView</string>
+	<string>UI-ListView</string>
+	<string>UI-PageView</string>
+	<string>UI-Box</string>
+	<string>CocosBuilder</string>
+	<string>CocoStudio</string>
+	<string>TileMap</string>
+	<string>Particle</string>
+	<string>Action</string>
+	<string>Connect</string>
+	<string>OtherMore</string>
+</array>
+</plist>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root><plists><plist>10003_move.plist</plist></plists><animations><animation>
+            <name>10003_move</name>
+            <delay>0.065</delay>
+            <flipX>false</flipX>
+            <flipY>false</flipY>
+            <spriteFrame>10003_move_0000.png</spriteFrame>
+            <spriteFrame>10003_move_0001.png</spriteFrame>
+            <spriteFrame>10003_move_0002.png</spriteFrame>
+            <spriteFrame>10003_move_0003.png</spriteFrame>
+            <spriteFrame>10003_move_0004.png</spriteFrame>
+            <spriteFrame>10003_move_0005.png</spriteFrame>
+            <spriteFrame>10003_move_0006.png</spriteFrame>
+            <spriteFrame>10003_move_0007.png</spriteFrame>
+        </animation></animations></root>
